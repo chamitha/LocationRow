@@ -6,6 +6,8 @@
 
 LocationRow is a [Eureka](https://eurekacommunity.github.io) custom row that allows you to search and select an address or location of interest using the map-based [MKLocalSearch](https://developer.apple.com/documentation/mapkit/mklocalsearch).
 
+![](https://github.com/chamitha/LocationRow/blob/master/LocationRow.gif)
+
 ## Installation
 
 ### Carthage
