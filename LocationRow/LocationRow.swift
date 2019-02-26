@@ -7,7 +7,7 @@ import Foundation
 public final class LocationCell: PushSelectorCell<CLPlacemark> {
     @IBOutlet public var clearButton: UIButton! {
         didSet {
-            clearButton.setImage(UIImage(named: "Clear", in: Bundle(for: LocationCell.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate), for: .normal)
+            clearButton.setImage(UIImage(named: "Clear", in: Bundle.current, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate), for: .normal)
             clearButton.tintColor = .lightGray
         }
     }
@@ -51,7 +51,7 @@ public final class LocationRow: Row<LocationCell>, RowType, PresenterRowType {
     public required init(tag: String?) {
         super.init(tag: tag)
 
-        cellProvider = CellProvider<LocationCell>(nibName: "LocationCell")
+        cellProvider = CellProvider<LocationCell>(nibName: "LocationCell", bundle: Bundle.current)
     }
 
     public override func customDidSelect() {
@@ -77,6 +77,18 @@ public final class LocationRow: Row<LocationCell>, RowType, PresenterRowType {
     }
 
     private func makeController() -> LocationViewController? {
-        return LocationViewController(nibName: "LocationViewController", bundle: Bundle(for: LocationViewController.self))
+        return LocationViewController(nibName: "LocationViewController", bundle: Bundle.current)
+    }
+}
+
+private extension Bundle {
+    class var current: Bundle {
+        let bundle = Bundle(for: LocationRow.self)
+
+        guard let url = bundle.url(forResource: "LocationRow", withExtension: "bundle") else {
+            return bundle
+        }
+
+        return Bundle(url: url)!
     }
 }
