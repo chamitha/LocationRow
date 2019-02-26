@@ -1,6 +1,6 @@
 # LocationRow
 
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![Cocoapods platforms](https://img.shields.io/cocoapods/p/LocationRow.svg) ![Cocoapods](https://img.shields.io/cocoapods/v/LocationRow.svg)
 
 ## Introduction
 
@@ -13,6 +13,11 @@ LocationRow is a [Eureka](https://eurekacommunity.github.io) custom row that all
 ### Carthage
 ```
 github "chamitha/LocationRow" ~> 1.0
+```
+
+### CocoaPods
+```
+pod 'LocationRow', '~> 1.0'
 ```
 
 ## Usage
