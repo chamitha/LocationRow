@@ -21,7 +21,7 @@ class ViewController: FormViewController {
                 row.placeholder = "Location"
                 }.onPresent({ (_, presentingViewController) in
                     presentingViewController.title = "Location"
-                    presentingViewController.placeholder = "Enter Location"
+                    presentingViewController.searchPlaceholder = "Enter Location"
                 })
     }
 }

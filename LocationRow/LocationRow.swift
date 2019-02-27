@@ -41,7 +41,7 @@ public final class LocationCell: PushSelectorCell<CLPlacemark> {
 }
 
 public final class LocationRow: Row<LocationCell>, RowType, PresenterRowType {
-    public typealias PresenterRow = LocationViewController
+    public typealias PresenterRow = LocationNavigationController
 
     public var presentationMode: PresentationMode<PresenterRow>?
     public var onPresentCallback: ((FormViewController, PresenterRow) -> Void)?
@@ -57,27 +57,26 @@ public final class LocationRow: Row<LocationCell>, RowType, PresenterRowType {
     public override func customDidSelect() {
         super.customDidSelect()
 
-        guard let controller = makeController() else { return }
-
-        presentationMode = PresentationMode.show(controllerProvider: ControllerProvider.callback {
-            controller
-        }, onDismiss: { viewController in
-            _ = viewController.navigationController?.popViewController(animated: true)
+        presentationMode = PresentationMode.presentModally(controllerProvider: ControllerProvider.callback {
+            let bar = LocationViewController(nibName: "LocationViewController", bundle: Bundle.current)
+            return LocationNavigationController(rootViewController: bar)
+            }, onDismiss: { viewController in
+                viewController.presentingViewController?.dismiss(animated: true)
         })
 
         guard let presentationMode = presentationMode, !isDisabled else { return }
 
         if let controller = presentationMode.makeController() {
             controller.row = self
+
             onPresentCallback?(cell.formViewController()!, controller)
+
+            controller.topViewController?.title = controller.title
+
             presentationMode.present(controller, row: self, presentingController: cell.formViewController()!)
         } else {
             presentationMode.present(nil, row: self, presentingController: cell.formViewController()!)
         }
-    }
-
-    private func makeController() -> LocationViewController? {
-        return LocationViewController(nibName: "LocationViewController", bundle: Bundle.current)
     }
 }
 

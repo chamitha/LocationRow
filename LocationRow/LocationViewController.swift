@@ -4,13 +4,12 @@ import Eureka
 import Foundation
 import MapKit
 
-public final class LocationViewController: UIViewController, TypedRowControllerType {
-    public var row: RowOf<CLPlacemark>!
-    public var onDismissCallback: ((UIViewController) -> Void)?
-
-    public var placeholder: String?
-
+public final class LocationViewController: UIViewController {
     @IBOutlet var tableView: UITableView!
+
+    var searchBar: UISearchBar? {
+        return searchController.searchBar
+    }
 
     private let searchController = UISearchController(searchResultsController: nil)
     private var searchResults: [MKMapItem] = []
@@ -24,7 +23,7 @@ public final class LocationViewController: UIViewController, TypedRowControllerT
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
 
-        searchController.searchBar.placeholder = placeholder ?? "Enter Location"
+        navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(LocationViewController.dismiss(_:))), animated: false)
 
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
@@ -33,6 +32,11 @@ public final class LocationViewController: UIViewController, TypedRowControllerT
         tableView.dataSource = self
 
         definesPresentationContext = true
+    }
+
+    @objc
+    func dismiss(_ sender: Any) {
+        (navigationController as? LocationNavigationController)?.onDismissCallback?(self)
     }
 
     private func address(for placemark: MKPlacemark) -> String {
@@ -88,8 +92,20 @@ extension LocationViewController: UITableViewDataSource {
 
 extension LocationViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        row.value = searchResults[indexPath.row].placemark
+        guard let navigationController = navigationController as? LocationNavigationController else { return }
 
-        navigationController?.popViewController(animated: true)
+        navigationController.row.value = searchResults[indexPath.row].placemark
+        navigationController.onDismissCallback?(self)
+    }
+}
+
+public class LocationNavigationController: UINavigationController, TypedRowControllerType {
+    public var row: RowOf<CLPlacemark>!
+    public var onDismissCallback: ((UIViewController) -> Void)?
+
+    public var searchPlaceholder: String? {
+        didSet {
+            (topViewController as? LocationViewController)?.searchBar?.placeholder = searchPlaceholder
+        }
     }
 }
