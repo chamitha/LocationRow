@@ -57,6 +57,8 @@ public final class LocationRow: Row<LocationCell>, RowType, PresenterRowType {
     public override func customDidSelect() {
         super.customDidSelect()
 
+        guard !isDisabled else { return }
+
         presentationMode = PresentationMode.presentModally(controllerProvider: ControllerProvider.callback {
             let bar = LocationViewController(nibName: "LocationViewController", bundle: Bundle.current)
             return LocationNavigationController(rootViewController: bar)
