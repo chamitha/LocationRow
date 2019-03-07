@@ -38,12 +38,13 @@ public final class LocationCell: PushSelectorCell<CLPlacemark> {
         super.update()
 
         detailTextLabel?.text = nil
-        accessoryType = .none
 
         guard let row = self.row as? LocationRow else { return }
 
+        let isEmpty = row.value?.name?.isEmpty ?? true
+
         textLabel?.text = row.value?.name ?? row.placeholder
-        textLabel?.textColor = row.value?.name != nil ? .black : UIColor(red: 198 / 255, green: 198 / 255, blue: 204 / 255, alpha: 1)
+        textLabel?.textColor = isEmpty ? UIColor(red: 198 / 255, green: 198 / 255, blue: 204 / 255, alpha: 1) : row.isDisabled ? .gray : .black
 
         clearButton.isHidden = isEmpty
         clearButton.isEnabled = !row.isDisabled
