@@ -5,19 +5,33 @@ import Eureka
 import Foundation
 
 public final class LocationCell: PushSelectorCell<CLPlacemark> {
-    @IBOutlet public var clearButton: UIButton! {
-        didSet {
-            clearButton.setImage(UIImage(named: "Clear", in: Bundle.current, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate), for: .normal)
-            clearButton.tintColor = .lightGray
-        }
-    }
+    @IBOutlet public weak var clearButton: UIButton!
 
     required init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        let clearButton = UIButton(frame: CGRect(x: 0, y: 0, width: 18, height: 18))
+        clearButton.setImage(UIImage(named: "Clear", in: Bundle.current, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate), for: .normal)
+        clearButton.tintColor = .lightGray
+
+        self.clearButton = clearButton
+
+        accessoryView = clearButton
+        editingAccessoryView = accessoryView
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+
+    deinit {
+        clearButton?.removeTarget(self, action: nil, for: .allEvents)
+    }
+
+    public override func setup() {
+        super.setup()
+
+        clearButton.addTarget(self, action: #selector(LocationCell.clear), for: .touchUpInside)
     }
 
     public override func update() {
@@ -31,10 +45,12 @@ public final class LocationCell: PushSelectorCell<CLPlacemark> {
         textLabel?.text = row.value?.name ?? row.placeholder
         textLabel?.textColor = row.value?.name != nil ? .black : UIColor(red: 198 / 255, green: 198 / 255, blue: 204 / 255, alpha: 1)
 
-        clearButton.isHidden = row.value?.name == nil
+        clearButton.isHidden = isEmpty
+        clearButton.isEnabled = !row.isDisabled
     }
 
-    @IBAction func clear(_: Any) {
+    @objc
+    func clear() {
         row.value = nil
         update()
     }
@@ -50,8 +66,6 @@ public final class LocationRow: Row<LocationCell>, RowType, PresenterRowType {
 
     public required init(tag: String?) {
         super.init(tag: tag)
-
-        cellProvider = CellProvider<LocationCell>(nibName: "LocationCell", bundle: Bundle.current)
     }
 
     public override func customDidSelect() {
