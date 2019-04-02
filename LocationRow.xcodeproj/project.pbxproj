@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2823556C221CC5B400DF4771 /* LocationRow.h in Headers */ = {isa = PBXBuildFile; fileRef = 2823556A221CC5B400DF4771 /* LocationRow.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		28235575221CC62100DF4771 /* LocationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28235572221CC62100DF4771 /* LocationCell.xib */; };
 		28235576221CC62100DF4771 /* LocationRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28235573221CC62100DF4771 /* LocationRow.swift */; };
 		28235577221CC62100DF4771 /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28235574221CC62100DF4771 /* LocationViewController.swift */; };
 		2823557A221CC80700DF4771 /* Eureka.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28235579221CC80700DF4771 /* Eureka.framework */; };
@@ -20,7 +19,6 @@
 		28235567221CC5B400DF4771 /* LocationRow.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LocationRow.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2823556A221CC5B400DF4771 /* LocationRow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocationRow.h; sourceTree = "<group>"; };
 		2823556B221CC5B400DF4771 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		28235572221CC62100DF4771 /* LocationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationCell.xib; sourceTree = "<group>"; };
 		28235573221CC62100DF4771 /* LocationRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationRow.swift; sourceTree = "<group>"; };
 		28235574221CC62100DF4771 /* LocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
 		28235579221CC80700DF4771 /* Eureka.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Eureka.framework; path = Carthage/Build/iOS/Eureka.framework; sourceTree = "<group>"; };
@@ -60,7 +58,6 @@
 		28235569221CC5B400DF4771 /* LocationRow */ = {
 			isa = PBXGroup;
 			children = (
-				28235572221CC62100DF4771 /* LocationCell.xib */,
 				28235573221CC62100DF4771 /* LocationRow.swift */,
 				28235574221CC62100DF4771 /* LocationViewController.swift */,
 				2823556A221CC5B400DF4771 /* LocationRow.h */,
@@ -150,7 +147,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				28235575221CC62100DF4771 /* LocationCell.xib in Resources */,
 				28235598221D006500DF4771 /* Assets.xcassets in Resources */,
 				2823557C221CCD8B00DF4771 /* LocationViewController.xib in Resources */,
 			);

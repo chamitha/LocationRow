@@ -5,43 +5,60 @@ import Eureka
 import Foundation
 
 public final class LocationCell: PushSelectorCell<CLPlacemark> {
-    @IBOutlet public var clearButton: UIButton! {
-        didSet {
-            clearButton.setImage(UIImage(named: "Clear", in: Bundle.current, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate), for: .normal)
-            clearButton.tintColor = .lightGray
-        }
-    }
+    @IBOutlet public weak var clearButton: UIButton!
 
     required init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        let clearButton = UIButton(frame: CGRect(x: 0, y: 0, width: 18, height: 18))
+        clearButton.setImage(UIImage(named: "Clear", in: Bundle.current, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate), for: .normal)
+        clearButton.tintColor = .lightGray
+
+        self.clearButton = clearButton
+
+        accessoryView = clearButton
+        editingAccessoryView = accessoryView
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
+    deinit {
+        clearButton?.removeTarget(self, action: nil, for: .allEvents)
+    }
+
+    public override func setup() {
+        super.setup()
+
+        clearButton.addTarget(self, action: #selector(LocationCell.clear), for: .touchUpInside)
+    }
+
     public override func update() {
         super.update()
 
         detailTextLabel?.text = nil
-        accessoryType = .none
 
         guard let row = self.row as? LocationRow else { return }
 
-        textLabel?.text = row.value?.name ?? row.placeholder
-        textLabel?.textColor = row.value?.name != nil ? .black : UIColor(red: 198 / 255, green: 198 / 255, blue: 204 / 255, alpha: 1)
+        let isEmpty = row.value?.name?.isEmpty ?? true
 
-        clearButton.isHidden = row.value?.name == nil
+        textLabel?.text = row.value?.name ?? row.placeholder
+        textLabel?.textColor = isEmpty ? UIColor(red: 198 / 255, green: 198 / 255, blue: 204 / 255, alpha: 1) : row.isDisabled ? .gray : .black
+
+        clearButton.isHidden = isEmpty
+        clearButton.isEnabled = !row.isDisabled
     }
 
-    @IBAction func clear(_: Any) {
+    @objc
+    func clear() {
         row.value = nil
         update()
     }
 }
 
 public final class LocationRow: Row<LocationCell>, RowType, PresenterRowType {
-    public typealias PresenterRow = LocationViewController
+    public typealias PresenterRow = LocationNavigationController
 
     public var presentationMode: PresentationMode<PresenterRow>?
     public var onPresentCallback: ((FormViewController, PresenterRow) -> Void)?
@@ -50,34 +67,33 @@ public final class LocationRow: Row<LocationCell>, RowType, PresenterRowType {
 
     public required init(tag: String?) {
         super.init(tag: tag)
-
-        cellProvider = CellProvider<LocationCell>(nibName: "LocationCell", bundle: Bundle.current)
     }
 
     public override func customDidSelect() {
         super.customDidSelect()
 
-        guard let controller = makeController() else { return }
+        guard !isDisabled else { return }
 
-        presentationMode = PresentationMode.show(controllerProvider: ControllerProvider.callback {
-            controller
-        }, onDismiss: { viewController in
-            _ = viewController.navigationController?.popViewController(animated: true)
+        presentationMode = PresentationMode.presentModally(controllerProvider: ControllerProvider.callback {
+            let bar = LocationViewController(nibName: "LocationViewController", bundle: Bundle.current)
+            return LocationNavigationController(rootViewController: bar)
+            }, onDismiss: { viewController in
+                viewController.presentingViewController?.dismiss(animated: true)
         })
 
         guard let presentationMode = presentationMode, !isDisabled else { return }
 
         if let controller = presentationMode.makeController() {
             controller.row = self
+
             onPresentCallback?(cell.formViewController()!, controller)
+
+            controller.topViewController?.title = controller.title
+
             presentationMode.present(controller, row: self, presentingController: cell.formViewController()!)
         } else {
             presentationMode.present(nil, row: self, presentingController: cell.formViewController()!)
         }
-    }
-
-    private func makeController() -> LocationViewController? {
-        return LocationViewController(nibName: "LocationViewController", bundle: Bundle.current)
     }
 }
 
